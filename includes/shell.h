@@ -27,6 +27,7 @@ int handle_execution_path(const char *cmd, const char **argv, char **env, shell_
 bool is_required_builtins(const char *cmd);
 int execute_builtins(const char *cmd, const char **argv, shell_t *shell);
 
+bool inside_environment(const char *key, const char *value, list_t **list);
 void print_env(list_t **list);
 
 int cd_builtin(const char **argv, shell_t *shell);

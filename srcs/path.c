@@ -9,21 +9,22 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include "define.h"
 #include "array.h"
+#include "define.h"
+#include "list.h"
 
-char *my_getenv(const char *key, char **env)
+char *my_getenv(const char *key, list_t **list)
 {
-    for (size_t i = 0; i < length_array((const char **) env); i++) {
-        if (strncmp(env[i], key, strlen(key)) == EXIT_SUCCESS)
-            return &env[i][strlen(key) + 1];
+    for (list_t *tmp = *list; tmp != NULL; tmp = tmp->_next) {
+        if (strcmp(tmp->_key, key) == EXIT_SUCCESS)
+            return tmp->_value;
     }
     return NULL;
 }
 
-char *get_absolute_path(const char *path, char **env)
+char *get_absolute_path(const char *path, list_t **list)
 {
-    char **path_prefix = str_to_word_array(my_getenv("PATH", env), ":");
+    char **path_prefix = str_to_word_array(my_getenv("PATH", list), ":");
 
     if (path_prefix == NULL)
         return NULL;

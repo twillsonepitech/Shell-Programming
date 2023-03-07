@@ -14,9 +14,9 @@
 #include "sig_handler.h"
 #include "path.h"
 
-static int execute_execve(const char *path, const char **argv, char **env)
+static int execute_execve(const char *path, const char **argv, char **env, list_t **list)
 {
-    char *absolute_path = get_absolute_path(path, env);
+    char *absolute_path = get_absolute_path(path, list);
 
     if (absolute_path == NULL)
         return EXIT_FAILURE_EPI;
@@ -51,7 +51,7 @@ int handle_execution_path(const char *path, const char **argv, char **env, shell
         return EXIT_FAILURE_EPI;
     }
     if (pid == 0) {
-        return execute_execve(path, argv, env);
+        return execute_execve(path, argv, env, &shell->_list);
     }
     else {
         waitpid(pid, &status, 0);

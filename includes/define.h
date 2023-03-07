@@ -23,12 +23,13 @@
         } while (false);                            \
 
 #define EXECVE_CMD_NOT_FOUND    ("%s: Command not found.\n")
+#define CD_MANY_ARGUMENTS       ("cd: Too many arguments.\n")
+#define ENV_ARGUMENTS           ("env: '%s': No such file or directory\n")
+#define EXIT_EXPRESSION_SYNTAX  ("exit: Expression Syntax.\n")
+#define EXIT_BADLY_FORMED_NUM   ("exit: Badly formed number.\n")
 #define SETENV_MANY_ARGUMENTS   ("setenv: Too many arguments.\n")
 #define SETENV_BEGIN_LETTER     ("setenv: Variable name must begin with a letter.\n")
 #define SETENV_CONTAIN_ALNUM    ("setenv: Variable name must contain alphanumeric characters.\n")
 #define UNSETENV_FEW_ARGUMENTS  ("unsetenv: Too few arguments.\n")
-#define ENV_ARGUMENTS           ("env: '%s': No such file or directory\n")
-#define EXIT_EXPRESSION_SYNTAX  ("exit: Expression Syntax.\n")
-#define EXIT_BADLY_FORMED_NUM   ("exit: Badly formed number.\n")
 
 #endif /* !DEFINE_H_ */
