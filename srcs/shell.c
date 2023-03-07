@@ -33,19 +33,16 @@ static char **create_environment(list_t **list)
     return env;
 }
 
-int handle_shell(char *buffer, shell_t *shell)
+int handle_command(char *command, shell_t *shell)
 {
-    char **argv = str_to_word_array(buffer, " \t\n");
+    char **argv = str_to_word_array(command, " \t\n");
     int ret = 0;
 
     if (argv == NULL)
         return EXIT_FAILURE_EPI;
     if (is_required_builtins(argv[0]) == true) {
-        if (execute_builtins(argv[0], (const char **) &argv[1], shell) == EXIT_FAILURE_EPI) {
-            shell->_echo = EXIT_FAILURE;
-            return EXIT_FAILURE_EPI;
-        }
-        shell->_echo = EXIT_SUCCESS;
+        ret = execute_builtins(argv[0], (const char **) &argv[1], shell);
+        shell->_echo = ret == EXIT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
     }
     else {
         char **env = create_environment(&shell->_list);
@@ -56,6 +53,22 @@ int handle_shell(char *buffer, shell_t *shell)
     }
     free_array(argv);
     return ret;
+}
+
+int handle_shell(char *buffer, shell_t *shell)
+{
+    char **argv = str_to_word_array(buffer, ";");
+
+    if (argv == NULL)
+        return EXIT_FAILURE_EPI;
+    for (size_t i = 0; i < length_array((const char **) argv); i++) {
+        if (handle_command(argv[i], shell) == EXIT_FAILURE_EPI) {
+            free_array(argv);
+            return EXIT_FAILURE_EPI;
+        }
+    }
+    free_array(argv);
+    return EXIT_SUCCESS;
 }
 
 int execute_shell(char const **env)

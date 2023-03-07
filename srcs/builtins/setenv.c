@@ -39,9 +39,8 @@ bool inside_environment(const char *key, const char *value, list_t **list)
 
 static int handle_setenv(const char *key, const char *value, list_t **list)
 {
-    if (list_add_node(list, key, value) == false) {
+    if (list_add_node(list, key, value) == false)
         return EXIT_FAILURE_EPI;
-    }
     return EXIT_SUCCESS;
 }
 
