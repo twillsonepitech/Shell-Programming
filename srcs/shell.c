@@ -19,7 +19,7 @@
 static char **create_environment(list_t **list)
 {
     char **env = (char **) init_pointer(sizeof(char *) * (length_list(list) + 1));
-    int i = 0;
+    size_t i = INIT;
 
     if (env == NULL)
         return NULL;
@@ -33,23 +33,38 @@ static char **create_environment(list_t **list)
     return env;
 }
 
+int handle_execve(char **argv, shell_t *shell)
+{
+    char **environ = create_environment(&shell->_environ);
+    char *path = NULL;
+    int ret = INIT;
+
+    if (environ == NULL)
+        return EXIT_FAILURE_EPI;
+    path = find_command_in_alias(argv[0], &shell->_alias);
+    if (path != NULL) {
+        char **new_argv = str_to_word_array(path, " ");
+        ret = handle_execution_path(new_argv[0], new_argv, environ, shell);
+        free_array(new_argv);
+    } else
+        ret = handle_execution_path(argv[0], argv, environ, shell);
+    free_array(environ);
+    return ret;
+}
+
 int handle_command(char *command, shell_t *shell)
 {
     char **argv = str_to_word_array(command, " \t\n");
-    int ret = 0;
+    int ret = INIT;
 
     if (argv == NULL)
         return EXIT_FAILURE_EPI;
     if (is_required_builtins(argv[0]) == true) {
-        ret = execute_builtins(argv[0], (const char **) &argv[1], shell);
+        ret = execute_builtins(argv[0], &argv[1], shell);
         shell->_echo = ret == EXIT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
     }
     else {
-        char **env = create_environment(&shell->_list);
-        if (env == NULL)
-            return EXIT_FAILURE_EPI;
-        ret = handle_execution_path(argv[0], (const char **) argv, env, shell);
-        free_array(env);
+        ret = handle_execve(argv, shell);
     }
     free_array(argv);
     return ret;
@@ -61,7 +76,7 @@ int handle_shell(char *buffer, shell_t *shell)
 
     if (argv == NULL)
         return EXIT_FAILURE_EPI;
-    for (size_t i = 0; i < length_array((const char **) argv); i++) {
+    for (size_t i = INIT; i < length_array((const char **) argv); i++) {
         if (handle_command(argv[i], shell) == EXIT_FAILURE_EPI) {
             free_array(argv);
             return EXIT_FAILURE_EPI;
@@ -74,10 +89,10 @@ int handle_shell(char *buffer, shell_t *shell)
 int execute_shell(char const **env)
 {
     char *buffer = NULL;
-    char path[PATH_MAX] = {0};
-    shell_t shell = {0};
-    size_t n = 0;
-    ssize_t rd = 0;
+    char path[PATH_MAX] = {INIT};
+    shell_t shell = {INIT};
+    size_t n = INIT;
+    ssize_t rd = INIT;
 
     if (handle_environment(env, &shell) == EXIT_FAILURE_EPI)
         return EXIT_FAILURE_EPI;
@@ -93,7 +108,7 @@ int execute_shell(char const **env)
         if (*buffer == '\0')
             continue;
         if (handle_shell(buffer, &shell) == EXIT_FAILURE_EPI) {
-            free_list(&shell._list);
+            free_list(&shell._environ);
             free(buffer);
             return EXIT_FAILURE_EPI;
         }
@@ -101,7 +116,7 @@ int execute_shell(char const **env)
             break;
     }
     dprintf(STDOUT_FILENO, "exit\n");
-    free_list(&shell._list);
+    free_list(&shell._environ);
     free(buffer);
     return shell._exit;
 }

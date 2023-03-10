@@ -22,12 +22,14 @@ static void handle_unsetenv(const char *key, list_t **list)
     return ;
 }
 
-int unsetenv_builtin(const char **argv, shell_t *shell)
+int unsetenv_builtin(char **argv, shell_t *shell)
 {
-    if (length_array(argv) == 0)
+    size_t len = length_array((const char **) argv);
+
+    if (len == 0)
         PRINT(STDERR_FILENO, EXIT_FAILURE, UNSETENV_FEW_ARGUMENTS);
-    for (int i = 0; argv[i] != NULL; i++) {
-        handle_unsetenv(argv[i], &shell->_list);
+    for (size_t i = INIT; i < len; i++) {
+        handle_unsetenv(argv[i], &shell->_environ);
     }
     return EXIT_SUCCESS;
 }

@@ -16,7 +16,7 @@ static int exit_error_handling(size_t len, const char *str)
 {
     if (isalpha(str[0]) != false)
         PRINT(STDERR_FILENO, EXIT_FAILURE, EXIT_EXPRESSION_SYNTAX);
-    for (size_t i = 0; i < strlen(str); i++) {
+    for (size_t i = INIT; i < strlen(str); i++) {
         if (isalpha(str[i]) != false)
             PRINT(STDERR_FILENO, EXIT_FAILURE, EXIT_BADLY_FORMED_NUM);
     }
@@ -25,9 +25,9 @@ static int exit_error_handling(size_t len, const char *str)
     return EXIT_SUCCESS;
 }
 
-int exit_builtin(const char **argv, shell_t *shell)
+int exit_builtin(char **argv, shell_t *shell)
 {
-    size_t len = length_array(argv);
+    size_t len = length_array((const char **) argv);
 
     if (len >= 1) {
         if (exit_error_handling(len, argv[0]) == EXIT_FAILURE)

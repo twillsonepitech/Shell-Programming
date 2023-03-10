@@ -18,7 +18,7 @@ static int setenv_error_handling(size_t len, const char *str)
         PRINT(STDERR_FILENO, EXIT_FAILURE, SETENV_MANY_ARGUMENTS);
     if (isalpha(str[0]) == false)
         PRINT(STDERR_FILENO, EXIT_FAILURE, SETENV_BEGIN_LETTER);
-    for (size_t i = 0; i < strlen(str); i++) {
+    for (size_t i = INIT; i < strlen(str); i++) {
         if (isalnum(str[i]) == false)
             PRINT(STDERR_FILENO, EXIT_FAILURE, SETENV_CONTAIN_ALNUM);
     }
@@ -44,18 +44,18 @@ static int handle_setenv(const char *key, const char *value, list_t **list)
     return EXIT_SUCCESS;
 }
 
-int setenv_builtin(const char **argv, shell_t *shell)
+int setenv_builtin(char **argv, shell_t *shell)
 {
-    size_t len = length_array(argv);
+    size_t len = length_array((const char **) argv);
 
     if (len == 0) {
-        print_env(&shell->_list);
+        print_env(&shell->_environ);
         return EXIT_SUCCESS;
     }
     if (setenv_error_handling(len, argv[0]) == EXIT_FAILURE)
         return EXIT_FAILURE;
-    if (inside_environment(argv[0], argv[1] == NULL ? "" : argv[1], &shell->_list) != true) {
-        if (handle_setenv(argv[0], argv[1] == NULL ? "" : argv[1], &shell->_list) == EXIT_FAILURE_EPI) {
+    if (inside_environment(argv[0], argv[1] == NULL ? "" : argv[1], &shell->_environ) != true) {
+        if (handle_setenv(argv[0], argv[1] == NULL ? "" : argv[1], &shell->_environ) == EXIT_FAILURE_EPI) {
             return EXIT_FAILURE_EPI;
         }
     }

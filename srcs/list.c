@@ -7,8 +7,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "define.h"
 #include "shell.h"
 
 static list_t *create_node(const char *key, const char *value)
@@ -49,7 +48,7 @@ void print_list(list_t **list)
 
 size_t length_list(list_t **list)
 {
-    size_t cnt = 0;
+    size_t cnt = INIT;
 
     for (list_t *tmp = *list; tmp != NULL; tmp = tmp->_next) {
         cnt++;

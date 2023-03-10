@@ -33,7 +33,8 @@ CPPFLAGS	+=	-iquote ./includes
 MAIN	=	${addsuffix .c, ${addprefix ./, main }}
 SRCS	=	${addsuffix .c, ${addprefix ./srcs/, shell array list builtins execve \
 				alloc path handle_env }}
-BLTS	=	${addsuffix .c, ${addprefix ./srcs/builtins/, cd echo env exit setenv unsetenv }}
+BLTS	=	${addsuffix .c, ${addprefix ./srcs/builtins/, alias cd echo env exit setenv unsetenv	\
+				redirections where repeat }}
 
 ALL_SRCS	:=	${MAIN}
 ALL_SRCS	+=	${SRCS}

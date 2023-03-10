@@ -17,10 +17,10 @@ void print_env(list_t **list)
     }
 }
 
-int env_builtin(const char **argv, shell_t *shell)
+int env_builtin(char **argv, shell_t *shell)
 {
-    if (length_array(argv) != 0)
+    if (length_array((const char **) argv) != 0)
         PRINT(STDERR_FILENO, EXIT_FAILURE, ENV_ARGUMENTS, argv[0]);
-    print_env(&shell->_list);
+    print_env(&shell->_environ);
     return EXIT_SUCCESS;
 }

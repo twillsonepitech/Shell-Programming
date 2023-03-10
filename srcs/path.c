@@ -28,7 +28,7 @@ char *get_absolute_path(const char *path, list_t **list)
 
     if (path_prefix == NULL)
         return NULL;
-    for (size_t i = 0; i < length_array((const char **) path_prefix); i++) {
+    for (size_t i = INIT; i < length_array((const char **) path_prefix); i++) {
         char *absolute_path = buffer_emplace_str(3, path_prefix[i], "/", path);
         if (absolute_path == NULL)
             return NULL;

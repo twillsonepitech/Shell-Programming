@@ -14,9 +14,9 @@
 
 static size_t my_strlen_c(const char *buffer, const char c)
 {
-    size_t cnt = 0;
+    size_t cnt = INIT;
 
-    for (int i = 0; buffer[i] != c; i++) {
+    for (size_t i = INIT; buffer[i] != c; i++) {
         cnt++;
     }
     return cnt;
@@ -24,7 +24,7 @@ static size_t my_strlen_c(const char *buffer, const char c)
 
 static void buffer_emplace_back(const char *str, char **buffer, const char c)
 {
-    for (int i = 0; str[i] != c; i++) {
+    for (size_t i = INIT; str[i] != c; i++) {
         (*buffer)[i] = str[i];
     }
 }
@@ -48,10 +48,10 @@ int handle_environment(char const **env, shell_t *shell)
     char *key = NULL;
     char *value = NULL;
 
-    for (size_t i = 0; i < length_array((const char **) env); i++) {
+    for (size_t i = INIT; i < length_array((const char **) env); i++) {
         if (get_key_value(env[i], &key, &value) == EXIT_FAILURE_EPI)
             return EXIT_FAILURE_EPI;
-        if (list_add_node(&shell->_list, key, value) == false)
+        if (list_add_node(&shell->_environ, key, value) == false)
             return EXIT_FAILURE_EPI;
         free(key);
         free(value);
