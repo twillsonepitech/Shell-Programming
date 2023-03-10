@@ -24,7 +24,6 @@ int handle_right_redirection(const char *filename, int flag)
     dup2(out_fd, STDOUT_FILENO);
     close(out_fd);
     return EXIT_SUCCESS;
-
 }
 
 int double_redirection_left(const char *delimiter)
