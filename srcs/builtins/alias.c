@@ -42,7 +42,7 @@ int alias_builtin(char **argv, shell_t *shell)
 
     if (len <= 1)
         return EXIT_FAILURE;
-    value = get_value(len, (const char **) argv + 1);
+    value = get_value(len - 1, (const char **) argv + 1);
     if (inside_environment(argv[0], value, &shell->_alias) != true) {
         if (list_add_node(&shell->_alias, argv[0], value) == false)
             return EXIT_FAILURE_EPI;

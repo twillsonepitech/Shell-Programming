@@ -64,7 +64,16 @@ static const builtins_t BUILTINS[] = {
 };
 
 // deleting "env" from built-in for pipe ('|') and redirections ('<<', '>>', '<', '>')
-
-__attribute__((unused)) static const char *builtins[] = {"alias", "cd", "echo", /*"env",*/ "exit", "repeat", "setenv", "unsetenv", "where"};
+__attribute__((unused)) static const char *builtins[] = {
+    "alias",
+    "cd",
+    "echo",
+    /*"env",*/
+    "exit",
+    "repeat",
+    "setenv",
+    "unsetenv",
+    "where"
+};
 
 #endif /* !SHELL_H_ */

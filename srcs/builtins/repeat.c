@@ -27,15 +27,20 @@ static int repeat_error_handling(size_t len, const char *str)
 
 static int execute_repeated_command(char **argv, shell_t *shell)
 {
+    char **new_argv = NULL;
+    char *path = find_command_in_alias(argv[0], &shell->_alias);
     int ret = INIT;
 
-    if (is_required_builtins(argv[0]) == true) {
-        ret = execute_builtins(argv[0], &argv[1], shell);
+    new_argv = path != NULL ? str_to_word_array(path, " ") : argv;
+    if (is_required_builtins(new_argv[0]) == true) {
+        ret = execute_builtins(new_argv[0], &new_argv[1], shell);
         shell->_echo = ret == EXIT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
     }
     else {
-        ret = handle_execve(argv, shell);
+        ret = handle_execve(new_argv, shell);
     }
+    if (path != NULL)
+        free_array(new_argv);
     return ret;
 }
 

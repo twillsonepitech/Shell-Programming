@@ -36,37 +36,37 @@ static char **create_environment(list_t **list)
 int handle_execve(char **argv, shell_t *shell)
 {
     char **environ = create_environment(&shell->_environ);
-    char *path = NULL;
+    //char *path = NULL;
     int ret = INIT;
 
     if (environ == NULL)
         return EXIT_FAILURE_EPI;
-    path = find_command_in_alias(argv[0], &shell->_alias);
-    if (path != NULL) {
-        char **new_argv = str_to_word_array(path, " ");
-        ret = handle_execution_path(new_argv[0], new_argv, environ, shell);
-        free_array(new_argv);
-    } else
-        ret = handle_execution_path(argv[0], argv, environ, shell);
+    ret = handle_execution_path(argv[0], argv, environ, shell);
     free_array(environ);
     return ret;
 }
 
 int handle_command(char *command, shell_t *shell)
 {
-    char **argv = str_to_word_array(command, " \t\n");
+    char **argv = str_to_word_array(command, " \t\n\r");
+    char **new_argv = NULL;
+    char *path = NULL;
     int ret = INIT;
 
     if (argv == NULL)
         return EXIT_FAILURE_EPI;
-    if (is_required_builtins(argv[0]) == true) {
-        ret = execute_builtins(argv[0], &argv[1], shell);
+    path = find_command_in_alias(argv[0], &shell->_alias);
+    new_argv = path != NULL ? str_to_word_array(path, " ") : argv;
+    if (is_required_builtins(new_argv[0]) == true) {
+        ret = execute_builtins(new_argv[0], &new_argv[1], shell);
         shell->_echo = ret == EXIT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
     }
     else {
-        ret = handle_execve(argv, shell);
+        ret = handle_execve(new_argv, shell);
     }
-    free_array(argv);
+    if (path != NULL)
+        free_array(argv);
+    free_array(new_argv);
     return ret;
 }
 

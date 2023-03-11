@@ -67,10 +67,13 @@ size_t length_array(const char **array)
 
 void free_array(char **array)
 {
+    if (array == NULL)
+        return;
     for (size_t i = INIT; array[i] != NULL; i++) {
         free(array[i]);
     }
     free(array);
+    array = NULL;
 }
 
 size_t count_string_in_array(const char **array, const char *string)
