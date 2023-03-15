@@ -70,7 +70,6 @@ int handle_shell(char *buffer, shell_t *shell)
     if (semicolons == NULL)
         return EXIT_FAILURE_EPI;
     for (size_t i = INIT; i < length_array((const char **) semicolons); i++) {
-        printf("[%s]\n", semicolons[i]);
         ret = strncmp(semicolons[i], "repeat", 6) != EXIT_SUCCESS ? handle_pipes(semicolons[i], shell) : handle_command(semicolons[i], shell);
         if (ret == EXIT_FAILURE_EPI)
             break;

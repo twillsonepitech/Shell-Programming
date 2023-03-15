@@ -52,9 +52,7 @@ Mkfile.old
 dkms.conf
 .vscode/
 test.c
-tester.sh
 tester.tgz
-tests
 mysh
 redirect.c
 pipe.c

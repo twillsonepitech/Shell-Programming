@@ -22,7 +22,7 @@ typedef struct signal_handler_s {
 static const signal_handler_t SIGNAL_HANDLER[] = {
     { SIGABRT, "Process aborted" },
     { SIGBUS, "Bus error" },
-    { SIGFPE, "Floating point exception" },
+    { SIGFPE, "Floating exception" },
     { SIGHUP, "Hangup signal" },
     { SIGILL, "Illegal instruction" },
     { SIGINT, "Interrupt signal" },

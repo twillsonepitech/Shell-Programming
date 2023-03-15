@@ -69,6 +69,8 @@ static void handle_signal(int status, int signal)
         if (SIGNAL_HANDLER[i]._signal == signal) {
             printf("%s", SIGNAL_HANDLER[i]._response);
             printf("%s\n", (signal == SIGSEGV || signal == SIGFPE) && WCOREDUMP(status) ? " (core dumped)" : "");
+            if (signal == SIGSEGV || signal == SIGFPE)
+                exit(status);
             return ;
         }
     }
