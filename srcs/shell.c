@@ -16,36 +16,6 @@
 #include "alloc.h"
 #include "array.h"
 
-static char **create_environment(list_t **list)
-{
-    char **env = (char **) init_pointer(sizeof(char *) * (length_list(list) + 1));
-    size_t i = INIT;
-
-    if (env == NULL)
-        return NULL;
-    for (list_t *tmp = *list; tmp != NULL; tmp = tmp->_next) {
-        char *line = buffer_emplace_str(3, tmp->_key, "=", tmp->_value);
-        if (line == NULL)
-            return NULL;
-        env[i++] = line;
-    }
-    env[i] = NULL;
-    return env;
-}
-
-int handle_execve(char **argv, shell_t *shell)
-{
-    char **environ = create_environment(&shell->_environ);
-    //char *path = NULL;
-    int ret = INIT;
-
-    if (environ == NULL)
-        return EXIT_FAILURE_EPI;
-    ret = handle_execution_path(argv[0], argv, environ, shell);
-    free_array(environ);
-    return ret;
-}
-
 int handle_command(char *command, shell_t *shell)
 {
     char **argv = str_to_word_array(command, " \t\n\r");
@@ -57,33 +27,52 @@ int handle_command(char *command, shell_t *shell)
         return EXIT_FAILURE_EPI;
     path = find_command_in_alias(argv[0], &shell->_alias);
     new_argv = path != NULL ? str_to_word_array(path, " ") : argv;
-    if (is_required_builtins(new_argv[0]) == true) {
-        ret = execute_builtins(new_argv[0], &new_argv[1], shell);
-        shell->_echo = ret == EXIT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
-    }
-    else {
-        ret = handle_execve(new_argv, shell);
-    }
+    if (shell->_pipe_count && pipe(shell->_pipes[STDIN]) == -1)
+        ret = EXIT_FAILURE_EPI;
+    if (ret == EXIT_SUCCESS)
+        ret = is_required_builtins(*new_argv) == true ? execute_builtins(*new_argv, new_argv + 1, shell) : handle_fork(new_argv, shell);
+    close_pipes(shell);
+    switch_pipes((int **) shell->_pipes);
     if (path != NULL)
         free_array(argv);
     free_array(new_argv);
+    shell->_echo = !shell->_is_signal ? ret == EXIT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE : shell->_echo;
     return ret;
+}
+
+int handle_pipes(char *command, shell_t *shell)
+{
+    char **pipes = str_to_word_array(command, "|");
+
+    if (pipes == NULL)
+        return EXIT_FAILURE_EPI;
+    shell->_pipe_count = length_array((const char **) pipes) - 1;
+    for (size_t i = INIT; i < length_array((const char **) pipes); i++) {
+        shell->_state = i;
+        if (handle_command(pipes[i], shell) == EXIT_FAILURE_EPI) {
+            free_array(pipes);
+            return EXIT_FAILURE_EPI;
+        }
+    }
+    free_array(pipes);
+    return EXIT_SUCCESS;
 }
 
 int handle_shell(char *buffer, shell_t *shell)
 {
-    char **argv = str_to_word_array(buffer, ";");
+    char **semicolons = str_to_word_array(buffer, ";");
+    int ret = INIT;
 
-    if (argv == NULL)
+    if (semicolons == NULL)
         return EXIT_FAILURE_EPI;
-    for (size_t i = INIT; i < length_array((const char **) argv); i++) {
-        if (handle_command(argv[i], shell) == EXIT_FAILURE_EPI) {
-            free_array(argv);
-            return EXIT_FAILURE_EPI;
-        }
+    for (size_t i = INIT; i < length_array((const char **) semicolons); i++) {
+        printf("[%s]\n", semicolons[i]);
+        ret = strncmp(semicolons[i], "repeat", 6) != EXIT_SUCCESS ? handle_pipes(semicolons[i], shell) : handle_command(semicolons[i], shell);
+        if (ret == EXIT_FAILURE_EPI)
+            break;
     }
-    free_array(argv);
-    return EXIT_SUCCESS;
+    free_array(semicolons);
+    return ret;
 }
 
 int execute_shell(char const **env)

@@ -25,33 +25,34 @@ static int repeat_error_handling(size_t len, const char *str)
     return EXIT_SUCCESS;
 }
 
-static int execute_repeated_command(char **argv, shell_t *shell)
+static char *create_command_to_repeat(char **argv)
 {
-    char **new_argv = NULL;
-    char *path = find_command_in_alias(argv[0], &shell->_alias);
-    int ret = INIT;
+    char *to_repeat = NULL;
+    size_t len = length_array((const char **) argv);
 
-    new_argv = path != NULL ? str_to_word_array(path, " ") : argv;
-    if (is_required_builtins(new_argv[0]) == true) {
-        ret = execute_builtins(new_argv[0], &new_argv[1], shell);
-        shell->_echo = ret == EXIT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
+    for (size_t i = INIT; i < len; i++) {
+        to_repeat = (char *) realloc(to_repeat, strlen(argv[i]) + 1 + strlen(to_repeat == NULL ? "" : to_repeat) + 1);
+        if (to_repeat == NULL)
+            return NULL;
+        i == 0 ? strcpy(to_repeat, argv[i]) : strcat(to_repeat, argv[i]);
+        if (i != len - 1)
+            strcat(to_repeat, " ");
     }
-    else {
-        ret = handle_execve(new_argv, shell);
-    }
-    if (path != NULL)
-        free_array(new_argv);
-    return ret;
+    return to_repeat;
 }
 
 int repeat_builtin(char **argv, shell_t *shell)
 {
+    char *to_repeat = NULL;
     size_t len = length_array((const char **) argv);
 
     if (repeat_error_handling(len, argv[0]) == EXIT_FAILURE)
         return EXIT_FAILURE;
+    to_repeat = create_command_to_repeat(&argv[1]);
+    if (to_repeat == NULL)
+        return EXIT_FAILURE_EPI;
     for (ssize_t i = INIT; i < atoll(argv[0]); i++) {
-        if (execute_repeated_command(&argv[1], shell) == EXIT_FAILURE_EPI)
+        if (handle_pipes(to_repeat, shell) == EXIT_FAILURE_EPI)
             return EXIT_FAILURE_EPI;
     }
     return EXIT_SUCCESS;

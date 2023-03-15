@@ -17,6 +17,11 @@
 #define PROMPT                  ("> ")
 #define CHAR_LENGTH             (1)
 #define BAD_FILE_DESCRIPTOR     (-1)
+#define STDIN                   (0)
+#define STDOUT                  (1)
+#define STDERR                  (2)
+#define REDIR_IN                (0)
+#define REDIR_OUT               (1)
 
 #define PRINT(__fd, __ret, __fmt, ...)              \
         do {                                        \

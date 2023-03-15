@@ -31,10 +31,10 @@ CFLAGS		+=	-Wall -Wextra -Werror -fPIC -pedantic
 CPPFLAGS	+=	-iquote ./includes
 
 MAIN	=	${addsuffix .c, ${addprefix ./, main }}
-SRCS	=	${addsuffix .c, ${addprefix ./srcs/, shell array list builtins execve \
+SRCS	=	${addsuffix .c, ${addprefix ./srcs/, shell array list builtins fexec \
 				alloc path handle_env }}
 BLTS	=	${addsuffix .c, ${addprefix ./srcs/builtins/, alias cd echo env exit setenv unsetenv	\
-				redirections where repeat }}
+				redirections where repeat pipes }}
 
 ALL_SRCS	:=	${MAIN}
 ALL_SRCS	+=	${SRCS}
