@@ -1,12 +1,12 @@
-##
-## Makefile for C in c:\Users\PC\Desktop\C\mysh
-##
-## Made by headers epitech
-## Login   <thomas.willson@epitech.eu>
-##
-## Started on  Sat Feb 11 1:49:22 AM 2023 headers epitech
-## Last update Sat Feb 11 1:49:22 AM 2023 headers epitech
-##
+#
+# @file Makefile
+# @author Thomas Willson (thomas.willson@epitech.eu)
+# @brief 
+# @version 0.1
+# @date 2023-03-15
+# 
+# @copyright Copyright (c) 2023
+# 
 
 # START of Makefile color and typo of messages
 

@@ -1,12 +1,13 @@
-/*
-** main.c for C in c:\Users\PC\Desktop\C\mysh
-**
-** Made by headers epitech
-** Login   <thomas.willson@epitech.eu>
-**
-** Started on  Sat Feb 11 1:48:00 AM 2023 headers epitech
-** Last update Sun Mar 4 9:43:24 PM 2023 headers epitech
-*/
+/**
+ * @file main.c
+ * @author Thomas Willson (thomas.willson@epitech.eu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-03-15
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

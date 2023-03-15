@@ -1,9 +1,13 @@
-/*
-** EPITECH PROJECT, 2023
-** Shell-Programming [WSL: Ubuntu]
-** File description:
-** list
-*/
+/**
+ * @file list.h
+ * @author Thomas Willson (thomas.willson@epitech.eu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-03-15
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 
 #ifndef LIST_H_
 #define LIST_H_

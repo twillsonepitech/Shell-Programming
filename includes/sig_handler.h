@@ -1,9 +1,13 @@
-/*
-** EPITECH PROJECT, 2023
-** Shell-Programming [WSL: Ubuntu]
-** File description:
-** sig_handler
-*/
+/**
+ * @file sig_handler.h
+ * @author Thomas Willson (thomas.willson@epitech.eu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-03-15
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 
 #ifndef SIG_HANDLER_H_
 #define SIG_HANDLER_H_

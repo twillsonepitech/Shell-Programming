@@ -1,9 +1,13 @@
-/*
-** EPITECH PROJECT, 2023
-** Shell-Programming [WSL: Ubuntu]
-** File description:
-** redirections
-*/
+/**
+ * @file redirections.h
+ * @author Thomas Willson (thomas.willson@epitech.eu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-03-15
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 
 #ifndef REDIRECTIONS_H_
 #define REDIRECTIONS_H_
