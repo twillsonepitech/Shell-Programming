@@ -58,12 +58,14 @@ int manage_redirection_file_creation(char *command)
 
     if (argv == NULL)
         return EXIT_FAILURE_EPI;
-    if (redirections_error_handling(argv) == EXIT_FAILURE)
+    if (redirections_error_handling(argv) == EXIT_FAILURE) {
+        free_array(argv);
         return EXIT_FAILURE;
+    }
     for (size_t i = INIT; i < length_array(argv); i++) {
         if (str_is_right_redirections(argv[i]) == true) {
             if (creat(argv[i + 1], S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == BAD_FILE_DESCRIPTOR)
-                return EXIT_FAILURE;
+                return EXIT_FAILURE_EPI;
         }
     }
     free_array(argv);

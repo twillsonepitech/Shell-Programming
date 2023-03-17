@@ -157,7 +157,7 @@ TESTS=
   echo "alias toto ls -la"
   echo "toto"
   echo "alias tata ls"
-  echo "touch hello ; tata | grep . > hello ; cat hello ; tata | grep . >> hello ; cat hello"
+  echo "tata | grep . > hello ; cat hello ; tata | grep . >> hello ; cat hello"
   echo "rm hello"
 [915-END]
 
@@ -168,7 +168,6 @@ CLEAN=""
 TESTS=
   echo "where ls"
   echo "where ls setenv"
-  echo "repeat 3 ls | grep . >> toto"
-  echo "cat toto"
+  echo "repeat 3 ls | grep . >> toto ; cat toto ; rm toto"
   echo "repeat 5 where ls"
 [916-END]
