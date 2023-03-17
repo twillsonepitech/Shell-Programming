@@ -32,7 +32,7 @@ static int repeat_error_handling(size_t len, const char *str)
 static char *create_command_to_repeat(char **argv)
 {
     char *to_repeat = NULL;
-    size_t len = length_array((const char **) argv);
+    size_t len = length_array(argv);
 
     for (size_t i = INIT; i < len; i++) {
         to_repeat = (char *) realloc(to_repeat, strlen(argv[i]) + 1 + strlen(to_repeat == NULL ? "" : to_repeat) + 1);
@@ -48,7 +48,7 @@ static char *create_command_to_repeat(char **argv)
 int repeat_builtin(char **argv, shell_t *shell)
 {
     char *to_repeat = NULL;
-    size_t len = length_array((const char **) argv);
+    size_t len = length_array(argv);
 
     if (repeat_error_handling(len, argv[0]) == EXIT_FAILURE)
         return EXIT_FAILURE;

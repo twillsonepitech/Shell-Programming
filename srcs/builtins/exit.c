@@ -31,7 +31,7 @@ static int exit_error_handling(size_t len, const char *str)
 
 int exit_builtin(char **argv, shell_t *shell)
 {
-    size_t len = length_array((const char **) argv);
+    size_t len = length_array(argv);
 
     if (len >= 1) {
         if (exit_error_handling(len, argv[0]) == EXIT_FAILURE)

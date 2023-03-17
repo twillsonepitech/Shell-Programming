@@ -21,7 +21,7 @@
 
 int echo_builtin(char **argv, shell_t *shell)
 {
-    size_t len = length_array((const char **) argv);
+    size_t len = length_array(argv);
 
     for (size_t i = INIT; i < len; i++) {
         if (strcmp(argv[i], "$?") == EXIT_SUCCESS) {

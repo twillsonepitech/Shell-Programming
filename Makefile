@@ -34,11 +34,14 @@ MAIN	=	${addsuffix .c, ${addprefix ./, main }}
 SRCS	=	${addsuffix .c, ${addprefix ./srcs/, shell array list builtins fexec \
 				alloc path handle_env }}
 BLTS	=	${addsuffix .c, ${addprefix ./srcs/builtins/, alias cd echo env exit setenv unsetenv	\
-				redirections where repeat pipes }}
+				where repeat }}
+UTILS	=	${addsuffix .c, ${addprefix ./srcs/utilities/, file_creation left_right_redir	\
+				pipes redirections semicolons }}
 
 ALL_SRCS	:=	${MAIN}
 ALL_SRCS	+=	${SRCS}
 ALL_SRCS	+=	${BLTS}
+ALL_SRCS	+=	${UTILS}
 
 TESTS_SRCS	:=	${SRCS}
 TESTS_SRCS	+=	${addsuffix .c, ${addprefix ./tests/tests_, free }}

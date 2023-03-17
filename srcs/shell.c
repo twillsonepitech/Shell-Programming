@@ -44,41 +44,7 @@ int handle_command(char *command, shell_t *shell)
     return ret;
 }
 
-int handle_pipes(char *command, shell_t *shell)
-{
-    char **pipes = str_to_word_array(command, "|");
-
-    if (pipes == NULL)
-        return EXIT_FAILURE_EPI;
-    shell->_pipe_count = length_array((const char **) pipes) - 1;
-    for (size_t i = INIT; i < length_array((const char **) pipes); i++) {
-        shell->_state = i;
-        if (handle_command(pipes[i], shell) == EXIT_FAILURE_EPI) {
-            free_array(pipes);
-            return EXIT_FAILURE_EPI;
-        }
-    }
-    free_array(pipes);
-    return EXIT_SUCCESS;
-}
-
-int handle_shell(char *buffer, shell_t *shell)
-{
-    char **semicolons = str_to_word_array(buffer, ";");
-    int ret = INIT;
-
-    if (semicolons == NULL)
-        return EXIT_FAILURE_EPI;
-    for (size_t i = INIT; i < length_array((const char **) semicolons); i++) {
-        ret = strncmp(semicolons[i], "repeat", 6) != EXIT_SUCCESS ? handle_pipes(semicolons[i], shell) : handle_command(semicolons[i], shell);
-        if (ret == EXIT_FAILURE_EPI)
-            break;
-    }
-    free_array(semicolons);
-    return ret;
-}
-
-int execute_shell(char const **env)
+int execute_shell(char **env)
 {
     char *buffer = NULL;
     char path[PATH_MAX] = {INIT};
@@ -99,7 +65,7 @@ int execute_shell(char const **env)
         buffer[rd - 1] = '\0';
         if (*buffer == '\0')
             continue;
-        if (handle_shell(buffer, &shell) == EXIT_FAILURE_EPI) {
+        if (handle_semicolons(buffer, &shell) == EXIT_FAILURE_EPI) {
             free_list(&shell._environ);
             free(buffer);
             return EXIT_FAILURE_EPI;

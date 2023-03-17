@@ -23,7 +23,7 @@ int find_path(const char *path, list_t **environ)
 
     if (path_prefix == NULL)
         return EXIT_FAILURE_EPI;
-    for (size_t i = INIT; i < length_array((const char **) path_prefix); i++) {
+    for (size_t i = INIT; i < length_array(path_prefix); i++) {
         char *absolute_path = buffer_emplace_str(3, path_prefix[i], "/", path);
         if (absolute_path == NULL)
             return EXIT_FAILURE_EPI;
@@ -38,7 +38,7 @@ int find_path(const char *path, list_t **environ)
 
 int where_builtin(char **argv, shell_t *shell)
 {
-    size_t len = length_array((const char **) argv);
+    size_t len = length_array(argv);
 
     if (len == 0)
         PRINT(STDERR_FILENO, EXIT_FAILURE, WHERE_FEW_ARGUMENTS);

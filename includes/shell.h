@@ -31,10 +31,12 @@ typedef struct shell_s {
     uint32_t _state;
 } shell_t;
 
+int handle_semicolons(char *buffer, shell_t *shell);
 int handle_pipes(char *command, shell_t *shell);
+int handle_command(char *command, shell_t *shell);
 
-int execute_shell(char const **env);
-int handle_environment(char const **env, shell_t *shell);
+int execute_shell(char **env);
+int handle_environment(char **env, shell_t *shell);
 int handle_fork(char **argv, shell_t *shell);
 
 bool is_required_builtins(const char *cmd);
@@ -55,6 +57,7 @@ int unsetenv_builtin(char **argv, shell_t *shell);
 int where_builtin(char **argv, shell_t *shell);
 
 int redirections_builtin(char **argv, const char *redir1, const char *redir2);
+int manage_redirection_file_creation(char *command);
 
 bool open_pipes(shell_t *shell);
 bool close_pipes(shell_t *shell);

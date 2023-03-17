@@ -50,7 +50,7 @@ static int handle_setenv(const char *key, const char *value, list_t **list)
 
 int setenv_builtin(char **argv, shell_t *shell)
 {
-    size_t len = length_array((const char **) argv);
+    size_t len = length_array(argv);
 
     if (len == 0) {
         print_env(&shell->_environ);

@@ -59,7 +59,7 @@ char *buffer_emplace_str(size_t number_str, ...)
     return buffer;
 }
 
-size_t length_array(const char **array)
+size_t length_array(char **array)
 {
     size_t cnt = INIT;
 
@@ -80,7 +80,7 @@ void free_array(char **array)
     array = NULL;
 }
 
-size_t count_string_in_array(const char **array, const char *string)
+size_t count_string_in_array(char **array, const char *string)
 {
     size_t cnt = INIT;
 

@@ -32,7 +32,7 @@ static int change_working_directory(const char *path, list_t **list)
 
 int cd_builtin(char **argv, shell_t *shell)
 {
-    size_t len = length_array((const char **) argv);
+    size_t len = length_array(argv);
     char *path = NULL;
 
     if (len >= 2)

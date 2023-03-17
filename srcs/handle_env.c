@@ -47,12 +47,12 @@ static int get_key_value(const char *dup, char **key, char **value)
     return EXIT_SUCCESS;
 }
 
-int handle_environment(char const **env, shell_t *shell)
+int handle_environment(char **env, shell_t *shell)
 {
     char *key = NULL;
     char *value = NULL;
 
-    for (size_t i = INIT; i < length_array((const char **) env); i++) {
+    for (size_t i = INIT; i < length_array(env); i++) {
         if (get_key_value(env[i], &key, &value) == EXIT_FAILURE_EPI)
             return EXIT_FAILURE_EPI;
         if (list_add_node(&shell->_environ, key, value) == false)

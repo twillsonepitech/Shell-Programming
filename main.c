@@ -15,7 +15,7 @@
 #include "shell.h"
 #include "define.h"
 
-int main(int argc, __attribute__((unused)) char const **argv, char const **envp)
+int main(int argc, __attribute__((unused)) char const **argv, char **envp)
 {
     if (argc != 1)
         PRINT(STDERR_FILENO, EXIT_FAILURE_EPI, "Usage: [%s].\n", argv[0]);

@@ -28,7 +28,7 @@ static void handle_unsetenv(const char *key, list_t **list)
 
 int unsetenv_builtin(char **argv, shell_t *shell)
 {
-    size_t len = length_array((const char **) argv);
+    size_t len = length_array(argv);
 
     if (len == 0)
         PRINT(STDERR_FILENO, EXIT_FAILURE, UNSETENV_FEW_ARGUMENTS);

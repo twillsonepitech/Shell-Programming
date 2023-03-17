@@ -24,7 +24,7 @@ char *find_command_in_alias(const char *command, list_t **alias)
     return NULL;
 }
 
-char *get_value(size_t len, const char **argv)
+char *get_value(size_t len, char **argv)
 {
     char *value = NULL;
 
@@ -42,11 +42,11 @@ char *get_value(size_t len, const char **argv)
 int alias_builtin(char **argv, shell_t *shell)
 {
     char *value = NULL;
-    size_t len = length_array((const char **) argv);
+    size_t len = length_array(argv);
 
     if (len <= 1)
         return EXIT_FAILURE;
-    value = get_value(len - 1, (const char **) argv + 1);
+    value = get_value(len - 1, argv + 1);
     if (inside_environment(argv[0], value, &shell->_alias) != true) {
         if (list_add_node(&shell->_alias, argv[0], value) == false)
             return EXIT_FAILURE_EPI;

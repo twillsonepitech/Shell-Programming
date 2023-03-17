@@ -133,7 +133,7 @@ NAME="semicolon and pipe and redirection"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
-  echo "mkdir test ; cd test ; ls -a ; touch tutu ; ls | cat | wc -c > tutu ; cat tutu ; cd .. ; rm -rf test"
+  echo "mkdir test ; cd test ; ls -a ; ls | cat | wc -c > tutu ; cat tutu ; cd .. ; rm -rf test"
 [913-END]
 
 [914]
