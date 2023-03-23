@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "array.h"
 #include "define.h"
 
@@ -64,7 +65,7 @@ int manage_redirection_file_creation(char *command)
     }
     for (size_t i = INIT; i < length_array(argv); i++) {
         if (str_is_right_redirections(argv[i]) == true) {
-            if (creat(argv[i + 1], S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == BAD_FILE_DESCRIPTOR)
+            if (close(creat(argv[i + 1], S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) == BAD_FILE_DESCRIPTOR)
                 return EXIT_FAILURE_EPI;
         }
     }
