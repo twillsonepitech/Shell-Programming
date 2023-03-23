@@ -12,7 +12,9 @@
 #include <linux/limits.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <string.h>
+#include <pwd.h>
 #include "array.h"
 #include "define.h"
 #include "list.h"
@@ -48,7 +50,17 @@ char *get_absolute_path(const char *path, list_t **list)
 
 int get_working_directory(char path[PATH_MAX])
 {
+    (void) memset(path, INIT, PATH_MAX);
     if (getcwd(path, PATH_MAX) == NULL)
         return EXIT_FAILURE_EPI;
     return EXIT_SUCCESS;
+}
+
+const char *get_home_directory(void)
+{
+    struct passwd *pw = getpwuid(getuid());
+
+    if (pw == NULL)
+        PRINT(STDERR_FILENO, NULL, "%s.\n", strerror(errno));
+    return pw->pw_dir;
 }

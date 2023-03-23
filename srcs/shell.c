@@ -44,37 +44,49 @@ int handle_command(char *command, shell_t *shell)
     return ret;
 }
 
+int manage_buffer(shell_t *shell)
+{
+    char path[PATH_MAX] = {INIT};
+    manage_line_t line = {INIT};
+
+    if (get_working_directory(path) == EXIT_FAILURE_EPI)
+        return EXIT_FAILURE_EPI;
+    if (isatty(STDIN_FILENO) != 0)
+        dprintf(STDOUT_FILENO, "[%s]> ", path);
+    line._rd = getline(&line._buffer, &line._n, stdin);
+    if (line._rd == EOF)
+        return BREAK_STATEMENT;
+    line._buffer[line._rd - 1] = '\0';
+    if (*line._buffer == '\0')
+        return CONTINUE_STATEMENT;
+    if (handle_semicolons(line._buffer, shell) == EXIT_FAILURE_EPI) {
+        free(line._buffer);
+        return EXIT_FAILURE_EPI;
+    }
+    if (shell->_is_exit == true)
+        return BREAK_STATEMENT;
+    return EXIT_SUCCESS;
+}
+
 int execute_shell(char **env)
 {
-    char *buffer = NULL;
-    char path[PATH_MAX] = {INIT};
     shell_t shell = {INIT};
-    size_t n = INIT;
-    ssize_t rd = INIT;
+    int ret = INIT;
 
     if (handle_environment(env, &shell) == EXIT_FAILURE_EPI)
         return EXIT_FAILURE_EPI;
     while (true) {
-        if (get_working_directory(path) == EXIT_FAILURE_EPI)
-            return EXIT_FAILURE_EPI;
-        if (isatty(STDIN_FILENO) != 0)
-            dprintf(STDOUT_FILENO, "[%s]> ", path);
-        rd = getline(&buffer, &n, stdin);
-        if (rd == EOF)
+        ret = manage_buffer(&shell);
+        if (ret == BREAK_STATEMENT)
             break;
-        buffer[rd - 1] = '\0';
-        if (*buffer == '\0')
+        if (ret == CONTINUE_STATEMENT)
             continue;
-        if (handle_semicolons(buffer, &shell) == EXIT_FAILURE_EPI) {
+        if (ret == EXIT_FAILURE_EPI) {
             free_list(&shell._environ);
-            free(buffer);
             return EXIT_FAILURE_EPI;
         }
-        if (shell._is_exit == true)
-            break;
     }
     dprintf(STDOUT_FILENO, "exit\n");
     free_list(&shell._environ);
-    free(buffer);
     return shell._exit;
 }

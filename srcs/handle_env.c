@@ -14,6 +14,7 @@
 #include "alloc.h"
 #include "array.h"
 #include "define.h"
+#include "path.h"
 #include "shell.h"
 
 static size_t my_strlen_c(const char *buffer, const char c)
@@ -47,6 +48,38 @@ static int get_key_value(const char *dup, char **key, char **value)
     return EXIT_SUCCESS;
 }
 
+static char *get_basic_env_variable_value(const char *value, value_info_t info)
+{
+    char path[PATH_MAX] = {INIT};
+
+    if (get_working_directory(path) == EXIT_FAILURE_EPI)
+        return NULL;
+    const struct {
+        const char *_value;
+    } ATTRIBUTE_VALUE[] = {
+        [RETURN_VALUE]   = {._value = value},
+        [RETURN_PATH]    = {._value = path},
+        [RETURN_SUBPATH] = {._value = get_home_directory()},
+    };
+
+    return strdup(ATTRIBUTE_VALUE[info]._value);
+}
+
+int check_basic_env_variable(list_t **environ)
+{
+    char *value;
+
+    for (size_t i = INIT; i < sizeof(BASIC_VARIABLE) / sizeof(BASIC_VARIABLE[0]); i++) {
+        if (my_getenv(BASIC_VARIABLE[i]._key, environ) == NULL) {
+            value = get_basic_env_variable_value(BASIC_VARIABLE[i]._value, BASIC_VARIABLE[i]._info);
+            if (list_add_node(environ, BASIC_VARIABLE[i]._key, value) == false)
+                return EXIT_FAILURE_EPI;
+            free(value);
+        }
+    }
+    return EXIT_SUCCESS;
+}
+
 int handle_environment(char **env, shell_t *shell)
 {
     char *key = NULL;
@@ -60,5 +93,5 @@ int handle_environment(char **env, shell_t *shell)
         free(key);
         free(value);
     }
-    return EXIT_SUCCESS;
+    return check_basic_env_variable(&shell->_environ);
 }

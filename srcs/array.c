@@ -90,3 +90,27 @@ size_t count_string_in_array(char **array, const char *string)
     }
     return cnt;
 }
+
+size_t strlen_limit(const char *str, char c, size_t limit)
+{
+    size_t i;
+    size_t cnt = INIT;
+
+    for (i = INIT; i < strlen(str); i++) {
+        if (str[i] == c)
+            cnt++;
+        if (cnt == limit)
+            break;
+    }
+    return i;
+}
+
+char *my_substr(const char *str, size_t begin, size_t end)
+{
+    char *substr = (char *) init_pointer(sizeof(char) * (end - begin) + 1);
+
+    if (substr == NULL)
+        return NULL;
+    strncpy(substr, str + begin, end - begin);
+    return substr;
+}

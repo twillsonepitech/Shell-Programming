@@ -31,6 +31,12 @@ typedef struct shell_s {
     uint32_t _state;
 } shell_t;
 
+typedef struct manage_line_s {
+    char *_buffer;
+    size_t _n;
+    ssize_t _rd;
+} manage_line_t;
+
 int handle_semicolons(char *buffer, shell_t *shell);
 int handle_pipes(char *command, shell_t *shell);
 int handle_command(char *command, shell_t *shell);

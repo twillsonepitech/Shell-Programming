@@ -26,6 +26,8 @@
 #define STDERR                  (2)
 #define REDIR_IN                (0)
 #define REDIR_OUT               (1)
+#define BREAK_STATEMENT         (2)
+#define CONTINUE_STATEMENT      (3)
 
 #define PRINT(__fd, __ret, __fmt, ...)              \
         do {                                        \
